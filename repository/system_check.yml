@@ -34,3 +34,12 @@
         success_msg: "Disk {{ item.mount }} is Healthy."
       loop: "{{ ansible_mounts }}"
       when: item.mount == '/'
+
+    - name: Check connectivity to progesio.com
+      uri:
+        url: "https://progesio.com"
+        method: GET
+        status_code: 200
+        return_content: no
+      register: result
+      failed_when: result.status != 200
