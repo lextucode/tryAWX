@@ -2,8 +2,16 @@
 - name: Setup Nginx Web Server
   hosts: localhost
   connection: local
-  gather_facts: yes
+  gather_facts: no
   tasks:
+    - name: Check current user
+      command: whoami
+      register: whoami_output
+
+    - name: Print current user
+      debug:
+        msg: "Running as user: {{ whoami_output.stdout }}"
+
     - name: Update package cache (Ubuntu/Debian only)
       apt:
         update_cache: yes
