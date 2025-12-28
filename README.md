@@ -35,3 +35,27 @@ Once deployed (it may take a few minutes for the pods to start), you can access 
 - **k3d**: Lightweight Kubernetes for running AWX.
 - **kubectl**: Kubernetes CLI.
 - **AWX Operator**: Deployed via `start-awx.sh`.
+
+## Install prerequisites
+
+If `start-awx.sh` reports missing tools, install them using the commands below.
+
+- Install `k3d` (quick installer):
+
+  ```bash
+  curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+  ```
+
+- Install `kubectl` (example using the upstream binary):
+
+  ```bash
+  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  chmod +x kubectl
+  sudo mv kubectl /usr/local/bin/
+  ```
+
+On Debian/Ubuntu you can also use `apt` for `kubectl`:
+
+```bash
+sudo apt-get update && sudo apt-get install -y kubectl
+```
