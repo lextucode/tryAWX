@@ -1,0 +1,36 @@
+---
+- name: System Resource Monitor
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Check RAM Usage
+      debug:
+        msg: 
+          - "Total Memory: {{ ansible_memtotal_mb }} MB"
+          - "Free Memory: {{ ansible_memfree_mb }} MB"
+          - "Used Memory: {{ ansible_memtotal_mb - ansible_memfree_mb }} MB"
+
+    - name: Check Disk Usage
+      debug:
+        msg: 
+          - "Mount: {{ item.mount }}"
+          - "Total: {{ (item.size_total / 1024 / 1024 / 1024) | round(2) }} GB"
+          - "Free: {{ (item.size_available / 1024 / 1024 / 1024) | round(2) }} GB"
+      loop: "{{ ansible_mounts }}"
+      when: item.size_total > 0
+
+    - name: Fail if memory is critically low (Demo threshold < 100MB)
+      assert:
+        that:
+          - ansible_memfree_mb > 100
+        fail_msg: "Critical: Free memory is less than 100MB!"
+        success_msg: "Memory status is Healthy."
+
+    - name: Fail if disk space is critically low (Demo threshold < 1GB)
+      assert:
+        that:
+          - (item.size_available / 1024 / 1024 / 1024) > 1
+        fail_msg: "Critical: Disk {{ item.mount }} has less than 1GB free!"
+        success_msg: "Disk {{ item.mount }} is Healthy."
+      loop: "{{ ansible_mounts }}"
+      when: item.mount == '/'
