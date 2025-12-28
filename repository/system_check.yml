@@ -1,6 +1,7 @@
 ---
 - name: System Resource Monitor
-  hosts: all
+  hosts: localhost
+  connection: local
   gather_facts: yes
   tasks:
     - name: Check RAM Usage
